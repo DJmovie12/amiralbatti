@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amiral Battı</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js" integrity="sha512-xbQU0+iHqhVt7VIXi6vBJKPh3IQBF5B84sSHdjKiSccyX/1ZI7Vnkt2/8y8uruj63/DVmCxfUNohPNruthTEQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+    body{
+      background: linear-gradient(350deg,#090290, #c8c5fa);
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      text-align: center;
+      height: 100vh;
+      font-size: 25px;
+      overflow-y: hidden;
+      font-family:cursive;
+  }.title{
+      font-size: 100px;
+      font-weight:bolder;
+  }
+  .container{
+      display: flex;
+  }
+  .img_ana{
+      width: 40px;
+      height: 40px;
+      background-image:url("img/anasayfa.png");
+  }
+  .basla{
+      backdrop-filter: blur(5.5px);
+      -webkit-backdrop-filter: blur(5.5px);
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      background: rgba(255, 255, 255, 0.30);
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      width: auto;
+      height: auto;
+      border-radius: 15px;
+      color: white;
+      margin:20px;
+  
+  }
+  .basla:hover{
+      box-shadow: 0 4px 40px rgba(0, 0, 0, 0.8);
+      transform: scale(1.2);
+      transition: all 0.3s ease;
+  }
+  .basla:not(:hover){
+      transition: all 0.3s ease;
+  }
+  
+  .kapa{
+      display: none;
+  }
+  .row{
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+  .alan {
+      position: relative;
+      z-index: 1;
+      background-color: #63aff5;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  }
+  .kalan {
+      position: relative;
+      z-index: 1;
+      background-color: #63aff5;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  }
+  .alans {
+      position: relative;
+      z-index: 1;
+      background-color: #63aff5;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  }
+  .pc-gemi {
+      position: relative;
+      z-index: 1;
+      background-color: #63aff5;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  
+  }
+  .pc-gemi-tiklandi {
+      position: relative;
+      z-index: 1;
+      background-color: #ffdd00;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  
+  }
+  .pc-alan-kapa {
+      position: relative;
+      z-index: 1;
+      background-color: #63aff5;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  
+  }
+  .pc-alan-kapaa {
+      position: relative;
+      z-index: 1;
+      background-color: #63aff5;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  
+  }
+  .pc-secti {
+      position: relative;
+      z-index: 1;
+      background-color: #ffdd00;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  
+  }
+  .pc-bos-secti {
+      position: relative;
+      z-index: 1;
+      background-color: rgba(255, 0, 0, 0.420);
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  
+  }
+  .kullanici-bos-secti {
+      position: relative;
+      z-index: 1;
+      background-color:rgba(255, 0, 0, 0.420);
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  
+  }
+  .alan-kopya{
+      position: relative;
+      z-index: 1;
+      background-color: #63aff5;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  }
+  .etkilesimsiz-alan{
+      position: relative;
+      z-index: 1;
+      background-color: #63aff5;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  
+  }
+  #popupc{
+      background-color: rgba(0, 0, 0, 0);
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      display: none;
+      z-index: 4;
+  }
+  .popup{
+    width: 350px;
+    height: 150px;
+      background-color: green;
+      padding: 15px;
+      text-align: center;
+      border-radius: 4px;
+      box-shadow: 0 15px 10px 3px rgba(0, 0, 0, 1.1);
+  }
+  #geri-tus{
+      color: black;
+  }
+  .bilgilendirme{
+      color: white;
+      font-size: 45px;
+  }
+  .sira{
+      color: rgb(255, 255, 255);
+      font-size: 50px;
+  }
+  #savas-alan{
+      width: 100vh;
+      height: 100vh;
+  }.gemili-alan{
+      background-color: #ff0000;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  
+  }
+  .gemili-alann{
+      position: relative;
+      z-index: 2;
+      background-color: #ff0000;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  }
+  .gemili-alannn{
+      position: relative;
+      z-index: 2;
+      background-color: #ff0000;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  }
+  .resim{
+      position: relative;
+      z-index: 5;
+  }
+  #cizgi{
+      margin: 10px;
+  }
+  .grafik{
+      fill: transparent;
+      stroke: #000000;
+      stroke-width: 4px;
+  }
+  .pcalan{
+      background-color: #63aff5;
+      border: 1px solid black;
+      height: 25px;
+      width: 25px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  }
+  .bekleme{
+      width: 100vh;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  }
+  .sirabilgi{
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#tekrar{
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 20px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+    <div id="popupc">
+        <div class="popup">
+          <h2 id="onaylanmismesaj">Kazandınız </h2>
+          <button id="tekrar">Tekrar Oyna</button>
+        </div>
+    </div><!--bunu yapıcan lna-->
+<div class="bekleme" id="ac">
+ Rakip bekleniyor...
+</div>
+<div class="kapa" id="ac1">
+<div id="kyer">
+    <div class="sirabilgi" id="bilgi"><p><b>Sıra Rakipte</b></p></div>
+    <p><b> Sizin Alanınız</b></p>
+    <div class="row">
+        <div class="kalan" id="101"></div>
+        <div class="kalan" id="102"></div>
+        <div class="kalan" id="103"></div>
+        <div class="kalan" id="104"></div>
+        <div class="kalan" id="105"></div>
+        <div class="kalan" id="106"></div>
+        <div class="kalan" id="107"></div>
+        <div class="kalan" id="108"></div>
+        <div class="kalan" id="109"></div>
+        <div class="kalan" id="110"></div></div>
+        <div class="row">
+            <div class="kalan" id="111"></div>
+            <div class="kalan" id="112"></div>
+            <div class="kalan" id="113"></div>
+            <div class="kalan" id="114"></div>
+            <div class="kalan" id="115"></div>
+            <div class="kalan" id="116"></div>
+            <div class="kalan" id="117"></div>
+            <div class="kalan" id="118"></div>
+            <div class="kalan" id="119"></div>
+            <div class="kalan" id="120"></div></div>
+            <div class="row">
+                <div class="kalan" id="121"></div>
+                <div class="kalan" id="122"></div>
+                <div class="kalan" id="123"></div>
+                <div class="kalan" id="124"></div>
+                <div class="kalan" id="125"></div>
+                <div class="kalan" id="126"></div>
+                <div class="kalan" id="127"></div>
+                <div class="kalan" id="128"></div>
+                <div class="kalan" id="129"></div>
+                <div class="kalan" id="130"></div></div>
+                <div class="row">
+                    <div class="kalan" id="131"></div>
+                    <div class="kalan" id="132"></div>
+                    <div class="kalan" id="133"></div>
+                    <div class="kalan" id="134"></div>
+                    <div class="kalan" id="135"></div>
+                    <div class="kalan" id="136"></div>
+                    <div class="kalan" id="137"></div>
+                    <div class="kalan" id="138"></div>
+                    <div class="kalan" id="139"></div>
+                    <div class="kalan" id="140"></div></div>
+                    <div class="row">
+                        <div class="kalan" id="141"></div>
+                        <div class="kalan" id="142"></div>
+                        <div class="kalan" id="143"></div>
+                        <div class="kalan" id="144"></div>
+                        <div class="kalan" id="145"></div>
+                        <div class="kalan" id="146"></div>
+                        <div class="kalan" id="147"></div>
+                        <div class="kalan" id="148"></div>
+                        <div class="kalan" id="149"></div>
+                        <div class="kalan" id="150"></div></div>
+                        <div class="row">
+                            <div class="kalan" id="151"></div>
+                            <div class="kalan" id="152"></div>
+                            <div class="kalan" id="153"></div>
+                            <div class="kalan" id="154"></div>
+                            <div class="kalan" id="155"></div>
+                            <div class="kalan" id="156"></div>
+                            <div class="kalan" id="157"></div>
+                            <div class="kalan" id="158"></div>
+                            <div class="kalan" id="159"></div>
+                            <div class="kalan" id="160"></div></div>
+                            <div class="row">
+                                <div class="kalan" id="161"></div>
+                                <div class="kalan" id="162"></div>
+                                <div class="kalan" id="163"></div>
+                                <div class="kalan" id="164"></div>
+                                <div class="kalan" id="165"></div>
+                                <div class="kalan" id="166"></div>
+                                <div class="kalan" id="167"></div>
+                                <div class="kalan" id="168"></div>
+                                <div class="kalan" id="169"></div>
+                                <div class="kalan" id="170"></div></div>
+                                <div class="row">
+                                    <div class="kalan" id="171"></div>
+                                    <div class="kalan" id="172"></div>
+                                    <div class="kalan" id="173"></div>
+                                    <div class="kalan" id="174"></div>
+                                    <div class="kalan" id="175"></div>
+                                    <div class="kalan" id="176"></div>
+                                    <div class="kalan" id="177"></div>
+                                    <div class="kalan" id="178"></div>
+                                    <div class="kalan" id="179"></div>
+                                    <div class="kalan" id="180"></div></div>
+                                    <div class="row">
+                                        <div class="kalan" id="181"></div>
+                                        <div class="kalan" id="182"></div>
+                                        <div class="kalan" id="183"></div>
+                                        <div class="kalan" id="184"></div>
+                                        <div class="kalan" id="185"></div>
+                                        <div class="kalan" id="186"></div>
+                                        <div class="kalan" id="187"></div>
+                                        <div class="kalan" id="188"></div>
+                                        <div class="kalan" id="189"></div>
+                                        <div class="kalan" id="190"></div></div>
+                                        <div class="row">
+                                            <div class="kalan" id="191"></div>
+                                            <div class="kalan" id="192"></div>
+                                            <div class="kalan" id="193"></div>
+                                            <div class="kalan" id="194"></div>
+                                            <div class="kalan" id="195"></div>
+                                            <div class="kalan" id="196"></div>
+                                            <div class="kalan" id="197"></div>
+                                            <div class="kalan" id="198"></div>
+                                            <div class="kalan" id="199"></div>
+                                            <div class="kalan" id="200"></div></div>
+</div>
+<div id="cizgi">
+    <svg height="375" width="10" class="grafik">
+        <line x1="5" y1="375" x2="5" y2="0" />
+    </svg>
+</div>
+<div id="pcyer">
+    <p><b> Rakibinizin Alanı</b></p>
+    <div class="row">
+    <div class="pcalan" id="0"></div>
+    <div class="pcalan" id="1"></div>
+    <div class="pcalan" id="2"></div>
+    <div class="pcalan" id="3"></div>
+    <div class="pcalan" id="4"></div>
+    <div class="pcalan" id="5"></div>
+    <div class="pcalan" id="6"></div>
+    <div class="pcalan" id="7"></div>
+    <div class="pcalan" id="8"></div>
+    <div class="pcalan" id="9"></div></div>
+    <div class="row">
+        <div class="pcalan" id="10"></div>
+        <div class="pcalan" id="11"></div>
+        <div class="pcalan" id="12"></div>
+        <div class="pcalan" id="13"></div>
+        <div class="pcalan" id="14"></div>
+        <div class="pcalan" id="15"></div>
+        <div class="pcalan" id="16"></div>
+        <div class="pcalan" id="17"></div>
+        <div class="pcalan" id="18"></div>
+        <div class="pcalan" id="19"></div></div>
+        <div class="row">
+            <div class="pcalan" id="20"></div>
+            <div class="pcalan" id="21"></div>
+            <div class="pcalan" id="22"></div>
+            <div class="pcalan" id="23"></div>
+            <div class="pcalan" id="24"></div>
+            <div class="pcalan" id="25"></div>
+            <div class="pcalan" id="26"></div>
+            <div class="pcalan" id="27"></div>
+            <div class="pcalan" id="28"></div>
+            <div class="pcalan" id="29"></div></div>
+            <div class="row">
+                <div class="pcalan" id="30"></div>
+                <div class="pcalan" id="31"></div>
+                <div class="pcalan" id="32"></div>
+                <div class="pcalan" id="33"></div>
+                <div class="pcalan" id="34"></div>
+                <div class="pcalan" id="35"></div>
+                <div class="pcalan" id="36"></div>
+                <div class="pcalan" id="37"></div>
+                <div class="pcalan" id="38"></div>
+                <div class="pcalan" id="39"></div></div>
+                <div class="row">
+                    <div class="pcalan" id="40"></div>
+                    <div class="pcalan" id="41"></div>
+                    <div class="pcalan" id="42"></div>
+                    <div class="pcalan" id="43"></div>
+                    <div class="pcalan" id="44"></div>
+                    <div class="pcalan" id="45"></div>
+                    <div class="pcalan" id="46"></div>
+                    <div class="pcalan" id="47"></div>
+                    <div class="pcalan" id="48"></div>
+                    <div class="pcalan" id="49"></div></div>
+                    <div class="row">
+                        <div class="pcalan" id="50"></div>
+                        <div class="pcalan" id="51"></div>
+                        <div class="pcalan" id="52"></div>
+                        <div class="pcalan" id="53"></div>
+                        <div class="pcalan" id="54"></div>
+                        <div class="pcalan" id="55"></div>
+                        <div class="pcalan" id="56"></div>
+                        <div class="pcalan" id="57"></div>
+                        <div class="pcalan" id="58"></div>
+                        <div class="pcalan" id="59"></div></div>
+                        <div class="row">
+                            <div class="pcalan" id="60"></div>
+                            <div class="pcalan" id="61"></div>
+                            <div class="pcalan" id="62"></div>
+                            <div class="pcalan" id="63"></div>
+                            <div class="pcalan" id="64"></div>
+                            <div class="pcalan" id="65"></div>
+                            <div class="pcalan" id="66"></div>
+                            <div class="pcalan" id="67"></div>
+                            <div class="pcalan" id="68"></div>
+                            <div class="pcalan" id="69"></div></div>
+                            <div class="row">
+                                <div class="pcalan" id="70"></div>
+                                <div class="pcalan" id="71"></div>
+                                <div class="pcalan" id="72"></div>
+                                <div class="pcalan" id="73"></div>
+                                <div class="pcalan" id="74"></div>
+                                <div class="pcalan" id="75"></div>
+                                <div class="pcalan" id="76"></div>
+                                <div class="pcalan" id="77"></div>
+                                <div class="pcalan" id="78"></div>
+                                <div class="pcalan" id="79"></div></div>
+                                <div class="row">
+                                    <div class="pcalan" id="80"></div>
+                                    <div class="pcalan" id="81"></div>
+                                    <div class="pcalan" id="82"></div>
+                                    <div class="pcalan" id="83"></div>
+                                    <div class="pcalan" id="84"></div>
+                                    <div class="pcalan" id="85"></div>
+                                    <div class="pcalan" id="86"></div>
+                                    <div class="pcalan" id="87"></div>
+                                    <div class="pcalan" id="88"></div>
+                                    <div class="pcalan" id="89"></div></div>
+                                    <div class="row">
+                                        <div class="pcalan" id="90"></div>
+                                        <div class="pcalan" id="91"></div>
+                                        <div class="pcalan" id="92"></div>
+                                        <div class="pcalan" id="93"></div>
+                                        <div class="pcalan" id="94"></div>
+                                        <div class="pcalan" id="95"></div>
+                                        <div class="pcalan" id="96"></div>
+                                        <div class="pcalan" id="97"></div>
+                                        <div class="pcalan" id="98"></div>
+                                        <div class="pcalan" id="99"></div></div>
+</div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+var socket = io();
+var ikincikisisocketid=0;
+const ac =document.getElementById('ac');
+const ac1 =document.getElementById('ac1');
+const kalan =document.querySelectorAll('.kalan');
+const ralan =document.querySelectorAll('.pcalan');
+const divList = document.querySelectorAll('div');
+const bilgi = document.getElementById("bilgi");
+const popup =document.getElementById('popupc');
+const mesaj_el=document.getElementById('onaylanmismesaj');
+const btn_tekrar=document.getElementById('tekrar');
+btn_tekrar.addEventListener('click', function() {
+  window.location.href = "http://localhost:3000";
+});
+if (performance.navigation.type === 1) {
+  window.location.href = 'http://localhost:3000';
+}
+
+//2 kullanıcı bağlandığında çalışır
+socket.on('start', () => {
+    ac.className = "kapa";
+    ac1.className = "bekleme";
+  });
+  //alınan gemi bilgilerini divlere yerleştirme
+  socket.on('cevirilmisidlist', (cevirilmisidlist) => {
+    console.log(cevirilmisidlist);
+    divList.forEach(function(div) {
+      for(i=0;i<divList.length;i++){
+        if (cevirilmisidlist[i]==div.id) {
+          div.className='pc-gemi';
+        }
+      }
+    });
+  });
+  
+  socket.on('cevirilmismyid', (cevirilmismyid) => {
+    console.log(cevirilmismyid);
+    divList.forEach(function(div) {
+        for(i=0;i<divList.length;i++){
+        if (cevirilmismyid[i]==div.id) {
+          div.className='gemili-alan';
+        }
+      }
+    });
+  });
+    socket.on('idList', (idList) => {
+    console.log(idList);
+    divList.forEach(function(div) {
+    if (div.id && idList.indexOf(div.id.toString()) !== -1) {
+        div.className='gemili-alan';
+    }
+  });
+  });
+  socket.on('myid', (myid) => {
+    console.log(myid);
+    divList.forEach(function(div) {
+    for(i=0;i<ralan.length;i++){
+    if (myid[i]==div.id) {
+      div.className='pc-gemi';
+    }
+    }
+  });
+  });
+  //tıklama işlemleri
+let kalangemi1=12;
+let kalangemi2=12;
+socket.on('sira1', (sira1) => {
+  console.log(kalangemi1);
+  if(kalangemi1==0){
+    socket.emit('oyuncubitirdi1',kalangemi1);
+    }else{
+var sira11="1";
+console.log("buraya girdi"+sira11);
+bilgi.innerText="Sıra Sizde";
+  ralan.forEach(function(ralan) {
+  ralan.addEventListener('click', function(event) {
+    if(sira11=="1"){
+      if (event.target.className === 'pc-gemi') {
+        kalangemi1=kalangemi1-1;
+        event.target.className = 'pc-secti';
+        console.log("1. kullanıcı gemiye tıkladı " + ralan.id);
+        socket.emit('pcsecti1', ralan.id);
+      } else if (event.target.className === 'pcalan') {
+        bilgi.innerText="Sıra Rakipte";
+        event.target.className = 'kullanici-bos-secti';
+        console.log("1. kullanıcı boş kutuya tıkladı " + ralan.id);
+        socket.emit('pcbos1', ralan.id);
+      } else if (event.target.className === "kullanici-bos-secti") {
+        alert("Bu alanı zaten patlattınız. Lütfen farklı bir alan deneyin.");
+        socket.emit('tekrarla1', ralan.id);
+      } else if (event.target.className === "pc-secti") {
+        alert("Bu alanda zaten bir gemi bulunuyor. Lütfen farklı bir alan deneyin.");
+        socket.emit('tekrarla1', ralan.id);
+      }
+  sira11=0;
+  console.log(sira11);
+}});});}});
+socket.on('sira2', (sira2) => {
+  console.log(kalangemi2);
+  if(kalangemi2==0){
+        socket.emit('oyuncubitirdi2',kalangemi2);
+    }else{
+var sira22="1";
+console.log("buraya girdi"+sira2);
+bilgi.innerText="Sıra Sizde";
+  ralan.forEach(function(ralan) {
+  ralan.addEventListener('click', function(event) {
+    if(sira22=="1"){
+      if (event.target.className === 'pc-gemi') {
+        kalangemi2=kalangemi2-1;
+        event.target.className = 'pc-secti';
+        console.log("2. kullanıcı gemiye tıkladı " + ralan.id);
+        socket.emit('pcsecti2', ralan.id);
+      } else if (event.target.className === 'pcalan') {
+        bilgi.innerText="Sıra Rakipte";
+        event.target.className = 'kullanici-bos-secti';
+        console.log("2. kullanıcı boş kutuya tıkladı " + ralan.id);
+        socket.emit('pcbos2', ralan.id);
+      } else if (event.target.className === "kullanici-bos-secti") {
+        alert("Bu alanı zaten patlattınız. Lütfen farklı bir alan deneyin.");
+        socket.emit('tekrarla2', ralan.id);
+      } else if (event.target.className === "pc-secti") {
+        alert("Bu alanda zaten bir gemi bulunuyor. Lütfen farklı bir alan deneyin.");
+        socket.emit('tekrarla2', ralan.id);
+      }
+  sira22=0;
+  console.log(sira22);
+}});});}});
+socket.on('pcbosgirdi',(tıklananbos)=>{
+    console.log(tıklananbos);
+    divList.forEach(function(div) {
+    for(i=0;i<ralan.length;i++){
+    if (tıklananbos==div.id) {
+      div.className='kullanici-bos-secti';
+    }
+    }
+  });
+});
+socket.on('pcbosgirdi2',(tıklananbos2)=>{
+    console.log(tıklananbos2);
+    divList.forEach(function(div) {
+    for(i=0;i<ralan.length;i++){
+    if (tıklananbos2==div.id) {
+      div.className='kullanici-bos-secti';
+    }
+    }
+  });
+});
+socket.on('bulunangemi',(bulunangemi)=>{
+    console.log(bulunangemi);
+  divList.forEach(function(div) {
+    for(i=0;i<ralan.length;i++){
+    if (bulunangemi==div.id) {
+      div.className='pc-secti';
+    }
+    }
+  });
+})
+socket.on('bulunangemi2',(bulunangemi2)=>{
+    console.log(bulunangemi2);
+    divList.forEach(function(div) {
+    for(i=0;i<ralan.length;i++){
+    if (bulunangemi2==div.id) {
+      div.className='pc-secti';
+    }
+    }
+  });
+});
+//kazandı , kaybetti ve pes etti bilgisi
+socket.on('oyuncukazandi1',(kalangemi1)=>{
+        popup.style.display= 'flex';
+        mesaj_el.innerText='Kazandınız';
+        socket.emit('oyuncu1kazandi');
+});
+socket.on('oyuncukazandi2',(kalangemi2)=>{
+        popup.style.display= 'flex';
+        mesaj_el.innerText='Kazandınız';
+        socket.emit('oyuncu2kazandi');
+});
+socket.on('oyuncukaybetti1',function(){
+        popup.style.display= 'flex';
+        mesaj_el.innerText='Kaybettiniz';
+        socket.emit('oyuncu1kaybetti');
+});
+socket.on('oyuncukaybetti2',function(){
+        popup.style.display= 'flex';
+        mesaj_el.innerText='Kaybettiniz';
+        socket.emit('oyuncu2kaybetti');
+});
+socket.on('oyuncupes1',(kontrol)=>{
+  if(!kontrol==1){
+        popup.style.display= 'flex';
+        mesaj_el.innerText='Rakibiniz pes etti';
+  }
+});
+socket.on('oyuncupes2',(kontrol)=>{
+  if(!kontrol==1){
+        popup.style.display= 'flex';
+        mesaj_el.innerText='Rakibiniz pes etti';
+  }
+});
+
+</script>
+</body>
+</html>
