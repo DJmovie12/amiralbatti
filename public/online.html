@@ -318,11 +318,11 @@
 </style>
 </head>
 <body>
-  <audio id="found" src="found.mp3"></audio>
-  <audio id="empty" src="sounds/empty.mp3"></audio>
-  <audio id="lose" src="sounds/lose.mp3"></audio>
-  <audio id="winn" src="sounds/winn.mp3"></audio>
-  <audio id="next" src="sounds/next.mp3"></audio>
+  <audio id="found" src="../sounds/found.mp3"></audio>
+  <audio id="empty" src="../sounds/empty.mp3"></audio>
+  <audio id="lose" src="../sounds/lose.mp3"></audio>
+  <audio id="winn" src="../sounds/winn.mp3"></audio>
+  <audio id="next" src="../sounds/next.mp3"></audio>
     <div id="popupc">
         <div class="popup">
           <h2 id="onaylanmismesaj">Kazandınız </h2>
@@ -581,6 +581,11 @@ const bilgi = document.getElementById("bilgi");
 const popup =document.getElementById('popupc');
 const mesaj_el=document.getElementById('onaylanmismesaj');
 const btn_tekrar=document.getElementById('tekrar');
+var audio = document.getElementById("found");
+var audio3 = document.getElementById("winn");
+var audio2 = document.getElementById("empty");
+var audio5 = document.getElementById("next");
+var audio4 = document.getElementById("lose");
 btn_tekrar.addEventListener('click', function() {
   window.location.href = "https://amiral-batti.herokuapp.com/";
 });
@@ -593,24 +598,19 @@ socket.on('start', () => {
     ac.className = "kapa";
     ac1.className = "bekleme";
   });
-  function playAudiofound() {
-  var audio = document.getElementById("found");
+function playAudiofound() {
   audio.play();
 }
 function playAudioempty() {
-  var audio2 = document.getElementById("empty");
   audio2.play();
 }
 function playAudiowinn() {
-  var audio3 = document.getElementById("winn");
   audio3.play();
 }
 function playAudiolose() {
-  var audio4 = document.getElementById("lose");
   audio4.play();
 }
 function playAudionext() {
-  var audio5 = document.getElementById("next");
   audio5.play();
 }
   //alınan gemi bilgilerini divlere yerleştirme
