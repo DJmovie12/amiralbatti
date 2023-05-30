@@ -720,44 +720,44 @@ bilgi.innerText="Sıra Sizde";
 }});});}});
 socket.on('pcbosgirdi',(tıklananbos)=>{
     console.log(tıklananbos);
+    playAudioempty();
     divList.forEach(function(div) {
     for(i=0;i<ralan.length;i++){
     if (tıklananbos==div.id) {
       div.className='kullanici-bos-secti';
-      playAudioempty();
     }
     }
   });
 });
 socket.on('pcbosgirdi2',(tıklananbos2)=>{
     console.log(tıklananbos2);
+    playAudioempty();
     divList.forEach(function(div) {
     for(i=0;i<ralan.length;i++){
     if (tıklananbos2==div.id) {
       div.className='kullanici-bos-secti';
-      playAudioempty();
     }
     }
   });
 });
 socket.on('bulunangemi',(bulunangemi)=>{
     console.log(bulunangemi);
-  divList.forEach(function(div) {
+    playAudiofound();
+    divList.forEach(function(div) {
     for(i=0;i<ralan.length;i++){
     if (bulunangemi==div.id) {
       div.className='pc-secti';
-      playAudiofound();
     }
     }
   });
 })
 socket.on('bulunangemi2',(bulunangemi2)=>{
     console.log(bulunangemi2);
+    playAudiofound();
     divList.forEach(function(div) {
     for(i=0;i<ralan.length;i++){
     if (bulunangemi2==div.id) {
       div.className='pc-secti';
-      playAudiofound();
     }
     }
   });
