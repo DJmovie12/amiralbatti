@@ -318,12 +318,17 @@
 </style>
 </head>
 <body>
+  <audio id="found" src="sounds/found.mp3"></audio>
+  <audio id="empty" src="sounds/empty.mp3"></audio>
+  <audio id="lose" src="sounds/lose.mp3"></audio>
+  <audio id="winn" src="sounds/winn.mp3"></audio>
+  <audio id="next" src="sounds/next.mp3"></audio>
     <div id="popupc">
         <div class="popup">
           <h2 id="onaylanmismesaj">Kazandınız </h2>
           <button id="tekrar">Tekrar Oyna</button>
         </div>
-    </div><!--bunu yapıcan lna-->
+    </div>
 <div class="bekleme" id="ac">
  Rakip bekleniyor...
 </div>
@@ -577,10 +582,10 @@ const popup =document.getElementById('popupc');
 const mesaj_el=document.getElementById('onaylanmismesaj');
 const btn_tekrar=document.getElementById('tekrar');
 btn_tekrar.addEventListener('click', function() {
-  window.location.href = "http://localhost:3000";
+  window.location.href = "https://amiral-batti.herokuapp.com/";
 });
 if (performance.navigation.type === 1) {
-  window.location.href = 'http://localhost:3000';
+  window.location.href = 'https://amiral-batti.herokuapp.com/';
 }
 
 //2 kullanıcı bağlandığında çalışır
@@ -588,6 +593,26 @@ socket.on('start', () => {
     ac.className = "kapa";
     ac1.className = "bekleme";
   });
+  function playAudiofound() {
+  var audio = document.getElementById("found");
+  audio.play();
+}
+function playAudioempty() {
+  var audio = document.getElementById("empty");
+  audio.play();
+}
+function playAudiowinn() {
+  var audio = document.getElementById("winn");
+  audio.play();
+}
+function playAudiolose() {
+  var audio = document.getElementById("lose");
+  audio.play();
+}
+function playAudionext() {
+  var audio = document.getElementById("next");
+  audio.play();
+}
   //alınan gemi bilgilerini divlere yerleştirme
   socket.on('cevirilmisidlist', (cevirilmisidlist) => {
     console.log(cevirilmisidlist);
@@ -699,6 +724,7 @@ socket.on('pcbosgirdi',(tıklananbos)=>{
     for(i=0;i<ralan.length;i++){
     if (tıklananbos==div.id) {
       div.className='kullanici-bos-secti';
+      playAudioempty();
     }
     }
   });
@@ -709,6 +735,7 @@ socket.on('pcbosgirdi2',(tıklananbos2)=>{
     for(i=0;i<ralan.length;i++){
     if (tıklananbos2==div.id) {
       div.className='kullanici-bos-secti';
+      playAudioempty();
     }
     }
   });
@@ -719,6 +746,7 @@ socket.on('bulunangemi',(bulunangemi)=>{
     for(i=0;i<ralan.length;i++){
     if (bulunangemi==div.id) {
       div.className='pc-secti';
+      playAudiofound();
     }
     }
   });
@@ -729,6 +757,7 @@ socket.on('bulunangemi2',(bulunangemi2)=>{
     for(i=0;i<ralan.length;i++){
     if (bulunangemi2==div.id) {
       div.className='pc-secti';
+      playAudiofound();
     }
     }
   });
@@ -738,32 +767,38 @@ socket.on('oyuncukazandi1',(kalangemi1)=>{
         popup.style.display= 'flex';
         mesaj_el.innerText='Kazandınız';
         socket.emit('oyuncu1kazandi');
+        playAudiowinn();
 });
 socket.on('oyuncukazandi2',(kalangemi2)=>{
         popup.style.display= 'flex';
         mesaj_el.innerText='Kazandınız';
         socket.emit('oyuncu2kazandi');
+        playAudiowinn();
 });
 socket.on('oyuncukaybetti1',function(){
         popup.style.display= 'flex';
         mesaj_el.innerText='Kaybettiniz';
         socket.emit('oyuncu1kaybetti');
+        playAudiolose();
 });
 socket.on('oyuncukaybetti2',function(){
         popup.style.display= 'flex';
         mesaj_el.innerText='Kaybettiniz';
         socket.emit('oyuncu2kaybetti');
+        playAudiolose();
 });
 socket.on('oyuncupes1',(kontrol)=>{
   if(!kontrol==1){
         popup.style.display= 'flex';
         mesaj_el.innerText='Rakibiniz pes etti';
+        playAudiowinn();
   }
 });
 socket.on('oyuncupes2',(kontrol)=>{
   if(!kontrol==1){
         popup.style.display= 'flex';
         mesaj_el.innerText='Rakibiniz pes etti';
+        playAudiowinn();
   }
 });
 
