@@ -671,11 +671,13 @@ bilgi.innerText="Sıra Sizde";
         kalangemi1=kalangemi1-1;
         event.target.className = 'pc-secti';
         console.log("1. kullanıcı gemiye tıkladı " + ralan.id);
+        playAudiofound();
         socket.emit('pcsecti1', ralan.id);
       } else if (event.target.className === 'pcalan') {
         bilgi.innerText="Sıra Rakipte";
         event.target.className = 'kullanici-bos-secti';
         console.log("1. kullanıcı boş kutuya tıkladı " + ralan.id);
+        playAudioempty();
         socket.emit('pcbos1', ralan.id);
       } else if (event.target.className === "kullanici-bos-secti") {
         alert("Bu alanı zaten patlattınız. Lütfen farklı bir alan deneyin.");
@@ -702,11 +704,13 @@ bilgi.innerText="Sıra Sizde";
         kalangemi2=kalangemi2-1;
         event.target.className = 'pc-secti';
         console.log("2. kullanıcı gemiye tıkladı " + ralan.id);
+        playAudiofound();
         socket.emit('pcsecti2', ralan.id);
       } else if (event.target.className === 'pcalan') {
         bilgi.innerText="Sıra Rakipte";
         event.target.className = 'kullanici-bos-secti';
         console.log("2. kullanıcı boş kutuya tıkladı " + ralan.id);
+        playAudioempty();
         socket.emit('pcbos2', ralan.id);
       } else if (event.target.className === "kullanici-bos-secti") {
         alert("Bu alanı zaten patlattınız. Lütfen farklı bir alan deneyin.");
