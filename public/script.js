@@ -477,7 +477,7 @@ osavas.addEventListener("click", function() {
           }
         });
 
-        fetch('http://localhost:3000/idList', {
+        fetch('https://amiral-batti.herokuapp.com/idList', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -487,7 +487,7 @@ osavas.addEventListener("click", function() {
         .then(response => response.text())
         .then(data => console.log(data))
         .catch(error => console.error(error));
-    window.location.href = "http://localhost:3000/osavas";
+    window.location.href = "https://amiral-batti.herokuapp.com/osavas";
   }
 });
 
