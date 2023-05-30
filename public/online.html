@@ -763,9 +763,9 @@ socket.on('bulunangemi2',(bulunangemi2)=>{
   });
 });
 //kazandı , kaybetti ve pes etti bilgisi
-socket.on('oyuncukazandi1',(kalangemi1)=>{
-        popup.style.display= 'flex';
-        mesaj_el.innerText='Kazandınız';
+socket.on('oyuncukazandi1', (kalangemi1) => {
+        popup.style.display = 'flex';
+        mesaj_el.innerText = 'Kazandınız';
         socket.emit('oyuncu1kazandi');
         playAudiowinn();
 });
