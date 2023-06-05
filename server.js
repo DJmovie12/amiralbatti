@@ -59,26 +59,34 @@ var tıklananbos;
 var tıklananbos2;
 var bulunangemi;
 var bulunangemi2;
-let sira2=1;
-let sira1=1;
+let sira2 = 1;
+let sira1 = 1;
+
 io.on('connection', (socket) => {
+  if (userCount >= 2) {
+    // 2 kullanıcı zaten bağlı olduğu için yeni kullanıcının bağlanmasını engelle
+    socket.emit('connection-rejected', 'Oyun zaten dolu.');
+    socket.disconnect();
+    return;
+  }
+
   sira = Math.floor(Math.random() * 2) + 1;
   userCount++;
   users[socket.id] = { id: userCount };
 
   if (!kisi1) {
-      kisi1 = socket.id;
-      socket.emit('user-id', kisi1);
-      console.log('1. kullanıcı katıldı: '+ kisi1);
+    kisi1 = socket.id;
+    socket.emit('user-id', kisi1);
+    console.log('1. kullanıcı katıldı: ' + kisi1);
   } else if (!kisi2) {
-      kisi2 = socket.id;
-      io.emit('start', 'start');
-      io.to(kisi1).emit('myid', myid);
-      io.to(kisi1).emit('idList', idList);
-      io.to(kisi2).emit('cevirilmismyid', cevirmyid);
-      io.to(kisi2).emit('cevirilmisidlist', ceviridList);
-      console.log('2. kullanıcı katıldı: '+ kisi2);
-      io.to(kisi1).emit('sira1',sira1);
+    kisi2 = socket.id;
+    io.emit('start', 'start');
+    io.to(kisi1).emit('myid', myid);
+    io.to(kisi1).emit('idList', idList);
+    io.to(kisi2).emit('cevirilmismyid', cevirmyid);
+    io.to(kisi2).emit('cevirilmisidlist', ceviridList);
+    console.log('2. kullanıcı katıldı: ' + kisi2);
+    io.to(kisi1).emit('sira1', sira1);
   }
   // kullanıcının kimliğini kaydet
   users[socket.id].userId = socket.id === kisi1 ? 1 : 2;
