@@ -14,80 +14,73 @@ app.use(function(req, res, next) {
     next();
   });
 
-var myid = [];
-var idList = [];
-var ceviridList=[];
-var cevirmyid=[];
-  app.post('/idList', (req, res) => {
-    console.log("buraya girdi");
-  
-    if(idList.length == 0) {
-      idList = req.body.idList;
-      console.log("buraya girdi2");
-    }
-    else {
-      myid = req.body.idList;
-      console.log("buraya girdi3");
-    }
-    myid = myid.map(element => element - 101);
-    io.emit('myid', myid);
-    io.emit('idList', idList);
-    console.log(idList);
-    console.log(myid);
-    ceviridList=idList;
-    cevirmyid=myid;
-    ceviridList= ceviridList.map(element=>element-101);
-    cevirmyid= cevirmyid.map(element=>element+101);
-    console.log("bu cevirilmiş myid "+ceviridList);
-    console.log("bu cevirilmiş idlist "+cevirmyid);
-    res.send('Data received');
+  app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
   });
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
-});
-app.get('/osavas', (req, res) => {
-  res.sendFile(__dirname + '/public/online.html');
-});
-app.use('/public', express.static(__dirname + '/public'));
-
-var kisi1;
-var kisi2;
-let userCount = 0;
-let users = {};
-var tıklananbos;
-var tıklananbos2;
-var bulunangemi;
-var bulunangemi2;
-let sira2 = 1;
-let sira1 = 1;
-
-io.on('connection', (socket) => {
-  if (userCount >= 2) {
-    // 2 kullanıcı zaten bağlı olduğu için yeni kullanıcının bağlanmasını engelle
-    socket.emit('connection-rejected', 'Oyun zaten dolu.');
-    socket.disconnect();
-    return;
-  }
-
-  sira = Math.floor(Math.random() * 2) + 1;
-  userCount++;
-  users[socket.id] = { id: userCount };
-
-  if (!kisi1) {
-    kisi1 = socket.id;
-    socket.emit('user-id', kisi1);
-    console.log('1. kullanıcı katıldı: ' + kisi1);
-  } else if (!kisi2) {
-    kisi2 = socket.id;
-    io.emit('start', 'start');
-    io.to(kisi1).emit('myid', myid);
-    io.to(kisi1).emit('idList', idList);
-    io.to(kisi2).emit('cevirilmismyid', cevirmyid);
-    io.to(kisi2).emit('cevirilmisidlist', ceviridList);
-    console.log('2. kullanıcı katıldı: ' + kisi2);
-    io.to(kisi1).emit('sira1', sira1);
-  }
+  app.get('/osavas', (req, res) => {
+    res.sendFile(__dirname + '/public/online.html');
+  });
+  app.use('/public', express.static(__dirname + '/public'));
+  var myid = [];
+  var idList = [];
+  var ceviridList=[];
+  var cevirmyid=[];
+  var kisi1;
+  var kisi2;
+  let userCount = 0;
+  let users = {};
+  var tıklananbos;
+  var tıklananbos2;
+  var bulunangemi;
+  var bulunangemi2;
+  let sira2=1;
+  let sira1=1;
+  
+    app.post('/idList', (req, res) => {
+      console.log("buraya girdi");
+    if(!kisi2){
+      if(idList.length == 0) {
+        idList = req.body.idList;
+        console.log("buraya girdi2");
+      }
+      else {
+        myid = req.body.idList;
+        console.log("buraya girdi3");
+      }
+      myid = myid.map(element => element - 101);
+      io.emit('myid', myid);
+      io.emit('idList', idList);
+      console.log(idList);
+      console.log(myid);
+      ceviridList=idList;
+      cevirmyid=myid;
+      ceviridList= ceviridList.map(element=>element-101);
+      cevirmyid= cevirmyid.map(element=>element+101);
+      console.log("bu cevirilmiş myid "+ceviridList);
+      console.log("bu cevirilmiş idlist "+cevirmyid);
+      res.send('Data received');
+    }
+    });
+  
+  io.on('connection', (socket) => {
+    sira = Math.floor(Math.random() * 2) + 1;
+    userCount++;
+    users[socket.id] = { id: userCount };
+  
+    if (!kisi1) {
+        kisi1 = socket.id;
+        socket.emit('user-id', kisi1);
+        console.log('1. kullanıcı katıldı: '+ kisi1);
+    } else if (!kisi2) {
+        kisi2 = socket.id;
+        io.emit('start', 'start');
+        io.to(kisi1).emit('myid', myid);
+        io.to(kisi1).emit('idList', idList);
+        io.to(kisi2).emit('cevirilmismyid', cevirmyid);
+        io.to(kisi2).emit('cevirilmisidlist', ceviridList);
+        console.log('2. kullanıcı katıldı: '+ kisi2);
+        io.to(kisi1).emit('sira1',sira1);
+    }
   // kullanıcının kimliğini kaydet
   users[socket.id].userId = socket.id === kisi1 ? 1 : 2;
   // tıklama işlemini dinle
